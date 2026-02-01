@@ -6,7 +6,7 @@ import fp from "fastify-plugin";
 export default fp((fastify, opts, done) => {
   (async () => {
     const client = await createClient({
-      password: process.env.REDIS_PASSWORD!,
+      url: process.env.REDIS_URL!,
     })
       .on("error", (err) => console.log("Redis Client Error", err))
       .connect();

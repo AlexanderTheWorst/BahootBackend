@@ -10,10 +10,16 @@ import fastifyCookie from "@fastify/cookie";
 import fastifyCors from "@fastify/cors";
 import redisClient from "./plugins/redis.client.js";
 
-config({
+import dotenv from "dotenv";
+import dotenvExpand from "dotenv-expand";
+
+const env = dotenv.config({
   quiet: true,
   path: "./.env",
 });
+dotenvExpand.expand(env);
+
+console.log(process.env.REDIS_URL);
 
 const fastify = Fastify();
 
