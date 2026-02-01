@@ -24,7 +24,7 @@ export default (async (fastify) => {
         secure: false,
       });
 
-      throw res.redirect("http://bahoot.local")
+      throw res.redirect(`${req.protocol}://${process.env.WEBSITE_URI!}`)
     } else return false;
   });
 }) satisfies FastifyPluginAsync;

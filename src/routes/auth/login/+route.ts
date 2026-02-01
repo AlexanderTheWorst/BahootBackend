@@ -7,7 +7,7 @@ export default (async (fastify) => {
   fastify.register(jwtAuth);
 
   fastify.post("/", async (req, res) => {
-    if (req.auth.user) return res.redirect("http://bahoot.local");
+    if (req.auth.user) return res.redirect(`${req.protocol}://${process.env.WEBSITE_URI!}`);
 
     const { username, password } = req.body as {
       username: string;
@@ -17,7 +17,7 @@ export default (async (fastify) => {
     if (!username || !password)
       return res.redirect(
         encodeURI(
-          `http://bahoot.local/login?error=Missing required credentials&username=${
+          `${req.protocol}://${process.env.WEBSITE_URI!}/login?error=Missing required credentials&username=${
             (username ?? "").length ? "true" : "false"
           }&usernameValue=${(username ?? "").length ? username : ""}&password=${
             (password ?? "").length ? "true" : "false"
@@ -37,7 +37,7 @@ export default (async (fastify) => {
     if (!user)
       return res.redirect(
         encodeURI(
-          `http://bahoot.local/login?error=There is no user with the username ${username}&username=${
+          `${req.protocol}://${process.env.WEBSITE_URI!}/login?error=There is no user with the username ${username}&username=${
             (username ?? "").length ? "true" : "false"
           }&usernameValue=${(username ?? "").length ? username : ""}&password=${
             (password ?? "").length ? "true" : "false"
@@ -49,7 +49,7 @@ export default (async (fastify) => {
     if (!verified)
       return res.redirect(
         encodeURI(
-          `http://bahoot.local/login?error=Incorrect username or password&username=${
+          `${req.protocol}://${process.env.WEBSITE_URI!}/login?error=Incorrect username or password&username=${
             (username ?? "").length ? "true" : "false"
           }&usernameValue=${(username ?? "").length ? username : ""}&password=${
             (password ?? "").length ? "true" : "false"
@@ -93,6 +93,6 @@ export default (async (fastify) => {
       secure: false,
     });
 
-    return res.redirect("http://bahoot.local");
+    return res.redirect(`${req.protocol}://${process.env.WEBSITE_URI!}`);
   });
 }) satisfies FastifyPluginAsync;

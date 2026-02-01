@@ -18,7 +18,7 @@ config({
 const fastify = Fastify();
 
 await fastify.register(fastifyCors, {
-  origin: ["http://bahoot.local"], // allow your frontend
+  origin: [`http://${process.env.WEBSITE_URI!}`, `https://${process.env.WEBSITE_URI!}`], // allow your frontend
   methods: ["PATCH", "PUT", "GET", "POST", "DELETE"],
   credentials: true, // if you send cookies
 });

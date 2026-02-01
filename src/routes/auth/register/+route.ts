@@ -7,7 +7,7 @@ export default (async (fastify) => {
   fastify.register(jwtAuth);
 
   fastify.post("/", async (req, res) => {
-    if (req.auth.user) throw res.redirect("http://bahoot.local");
+    if (req.auth.user) throw res.redirect(`${req.protocol}://${process.env.WEBSITE_URI!}`);
 
     const { username, password } = req.body as {
       username: string;
@@ -17,7 +17,7 @@ export default (async (fastify) => {
     if (!username || !password)
       throw res.redirect(
         encodeURI(
-          `http://bahoot.local/register?error=Required fields have not been filled out&username=${
+          `${req.protocol}://${process.env.WEBSITE_URI!}/register?error=Required fields have not been filled out&username=${
             (username ?? "").length ? "true" : "false"
           }&usernameValue=${(username ?? "").length ? username : ""}&password=${
             (password ?? "").length ? "true" : "false"
@@ -34,7 +34,7 @@ export default (async (fastify) => {
     if (existingUser)
       throw res.redirect(
         encodeURI(
-          `http://bahoot.local/register?error=Username already in use&usernameValue=${username}`
+          `${req.protocol}://${process.env.WEBSITE_URI!}/register?error=Username already in use&usernameValue=${username}`
         )
       );
 
@@ -84,7 +84,7 @@ export default (async (fastify) => {
         secure: false,
       });
 
-      return res.redirect("http://bahoot.local");
+      return res.redirect(`${req.protocol}://${process.env.WEBSITE_URI!}`);
     } catch (err) {
       console.warn((err as Error).message);
     }
