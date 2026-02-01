@@ -2,3 +2,4 @@ node_modules
 prisma/generated
 prisma/migrations
 .env
+pnpm-lock.yaml
