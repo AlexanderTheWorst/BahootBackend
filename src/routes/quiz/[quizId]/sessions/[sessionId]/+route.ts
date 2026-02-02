@@ -46,7 +46,8 @@ export default (async (fastify) => {
       (await fastify.redis.get(`sessions:${sessionId}`)) ?? ""
     ) as SessionData;
 
-    if (!sessionData) return;
+    if (!sessionData) throw res.status(403);;
+    if (sessionData.userId !== req.auth.user.id) throw res.status(403);
 
     const quiz = await fastify.db.quiz.findFirst({
       select: {

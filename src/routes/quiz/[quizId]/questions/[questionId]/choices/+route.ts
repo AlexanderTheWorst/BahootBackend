@@ -12,6 +12,19 @@ export default (async (fastify) => {
 
     const { quizId, questionId } = req.params as { quizId: string, questionId: string };
 
+    const quiz = await fastify.db.quiz.findFirst({
+      select: {
+        creator: true,
+        id: true
+      },
+      where: {
+        id: quizId,
+      },
+    });
+
+    if (!quiz) throw res.status(404);
+    if (quiz?.creator.id !== req.auth.user.id) throw res.status(403);
+
     const question = await fastify.db.quizQuestion.findFirst({
         select: {
             id: true,

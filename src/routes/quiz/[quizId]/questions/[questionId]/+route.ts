@@ -16,12 +16,17 @@ export default (async (fastify) => {
     };
 
     const quiz = await fastify.db.quiz.findFirst({
+      select: {
+        id: true,
+        creator: true
+      },
       where: {
         id: quizId,
       },
     });
 
     if (!quiz) throw res.status(404);
+    if (quiz?.creator.id !== req.auth.user.id) throw res.status(403);
 
     const question = await fastify.db.quizQuestion.findFirst({
       where: {
@@ -49,12 +54,23 @@ export default (async (fastify) => {
   fastify.patch("/", async (req, res) => {
     if (!req.auth.user) throw res.status(403);
 
-    console.log("YO!");
-
     const { quizId, questionId } = req.params as {
       quizId: string;
       questionId: string;
     };
+
+    const quiz = await fastify.db.quiz.findFirst({
+      select: {
+        id: true,
+        creator: true
+      },
+      where: {
+        id: quizId,
+      },
+    });
+
+    if (!quiz) throw res.status(404);
+    if (quiz?.creator.id !== req.auth.user.id) throw res.status(403);
 
     const question = await fastify.db.quizQuestion.findFirst({
       where: {
